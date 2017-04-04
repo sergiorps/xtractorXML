@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>EXTRATOR-XML</title>
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="north" size="44" header="EXTRATOR-XML" style="text-align:center">
+			
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" size="50" resizable="true"
+			closable="false" collapsible="true">
+		</p:layoutUnit>
+
+		<p:layoutUnit position="east" size="50" resizable="true"
+			closable="false" collapsible="true">
+		</p:layoutUnit>
+
+		<p:layoutUnit id="layout" position="center">
+			<h:form id="form" StyleClass="default" style="font-size: 13px">
+				<p:growl id="msgs" showDetail="true" sticky="true" />
+
+				<p:dataTable 	id="dtable" 
+								var="nota" 
+								value="#{notaRelatMB.notarelat}"
+								emptyMessage="Nenhum registro encontrado." 
+								selectionMode="single"
+								selection="#{dtSelectionView.selectedNF}"
+								rowKey="#{nota.id}"
+								paginator="true"
+								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         		rowsPerPageTemplate="5,10,15"
+                         		sortBy="#{nota.id}"
+                         		update=":form">
+
+					<f:facet name="header">Notas Fiscais Recepcionadas</f:facet>
+					
+					<p:ajax event="rowSelect" oncomplete="PF('dialogDetNF').show()" update=":form:myDialog"/>
+					<p:ajax event="rowUnselect" listener="#{dtSelectionView.onRowUnselect}" update=":form:msgs"/>
+
+					<p:column headerText="Razão Social">
+						<h:outputText id="forn" value="#{nota.nome_razao_social}" />
+					</p:column>
+					<p:column headerText="Cidade">
+						<h:outputText value="#{nota.cidade}" />
+					</p:column>
+					<p:column headerText="CPF/CNPJ">
+						<h:outputText value="#{nota.cpfcnpj}" />
+					</p:column>
+					<p:column headerText="Valor Total">
+						<h:outputText value="#{nota.valortotal}" />
+					</p:column>
+					<p:column headerText="Valor IR">
+						<h:outputText value="#{nota.valorir}" />
+					</p:column>
+								
+					<f:facet name="footer"> </f:facet>
+				</p:dataTable>
+				
+				<p:dialog id="myDialog" header="Detalhes da Nota Fiscal"
+					widgetVar="dialogDetNF" height="500" width="800">
+					<h:form>
+						<p:tabView>
+							<p:tab title="NFS-e">
+								<h:panelGrid columns="2" cellpadding="10">
+									<h:outputLabel value="Razão Social:" />
+									<h:outputText value="#{dtSelectionView.selectedNF.nome_razao_social}" />
+									<h:outputLabel value="Cidade:" />
+									<h:outputText value="#{dtSelectionView.selectedNF.cidade}" />
+									<h:outputLabel value="CNPJ:" />
+									<h:outputText value="#{dtSelectionView.selectedNF.cpfcnpj}" />	
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Serviço Prestado">
+								<h:panelGrid columns="2" cellpadding="10">
+									<h:outputLabel value="Descrição do Serviço:" />
+									<h:outputText value="SERVIÇOS GERAIS PRESTADOS" />
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Valores">
+								<h:panelGrid columns="2" cellpadding="10">
+									<h:outputLabel value="Valor Total" />
+									<h:outputText value="#{dtSelectionView.selectedNF.valortotal}" />
+									<h:outputLabel value="Valor do IR" />
+									<h:outputText value="#{dtSelectionView.selectedNF.valorir}" />
+								</h:panelGrid>
+							</p:tab>
+						</p:tabView>
+					</h:form>
+				</p:dialog>
+				
+			</h:form>
+		</p:layoutUnit>
+		
+		<p:layoutUnit position="south" size="50" footer="SRS Consultoria - Versão 1.0" style="text-align:right; font-size:80%" />
+
+	</p:layout>
+</h:body>
+</html>
